@@ -116,14 +116,12 @@ func JsonERROR(c *fiber.Ctx, err error) error {
 			Msg:    errMsg.Msg,
 		}
 
-		c.Status(errMsg.StatusCode).JSON(res)
-		return err
+		return c.Status(errMsg.StatusCode).JSON(res)
 	default:
 		res := ErrorWithCode{
 			CodeID: http.StatusInternalServerError,
 			Msg:    "Error message type not defined.",
 		}
-		c.Status(res.CodeID).JSON(res)
-		return err
+		return c.Status(res.CodeID).JSON(res)
 	}
 }

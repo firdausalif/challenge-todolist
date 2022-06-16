@@ -1,25 +1,26 @@
 package route
 
 import (
+	"github.com/firdausalif/challenge-todolist/app/controllers"
+	"github.com/firdausalif/challenge-todolist/app/repositories"
+	"github.com/firdausalif/challenge-todolist/app/services"
+	"github.com/firdausalif/challenge-todolist/pkg/validator"
+	"github.com/firdausalif/challenge-todolist/platform/database"
 	"github.com/gofiber/fiber/v2"
+	"time"
 )
 
 // PublicRoutes func for describe group of public route.
 func PublicRoutes(app *fiber.App) {
-	//db := database.GetDB()
-	//validate := validator.NewValidator()
-	//
-	//userRepository := repositories.NewUserGormRepo(db)
-	//userService := services.NewUserService(userRepository, validate)
-	//
-	//authService := services.NewAuthService(userService)
-	//authController := controllers.NewAuthController(userService, authService)
+	db := database.GetDB()
+	validate := validator.NewValidator()
+	timeoutCtx := time.Duration(100) * time.Second
 
-	//Create route group.
-	//route := app.Group("/api/v1")
-	//
-	////create auth group
-	//auth := route.Group("auth")
-	//auth.Post("/login", authController.Login)
-	//auth.Post("/register", authController.Register)
+	activityRepo := repositories.NewActivityRepository(db)
+	activityService := services.NewActivityService(activityRepo, timeoutCtx)
+	activityController := controllers.NewActivityController(activityService, validate)
+
+	activityGroup := app.Group("/activity-groups")
+	activityGroup.Get("", activityController.FetchHandler)
+	activityGroup.Post("", activityController.StoreActivityHandler)
 }

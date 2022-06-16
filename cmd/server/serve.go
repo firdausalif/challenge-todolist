@@ -2,11 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/firdausalif/skripsi/dokumen-service/pkg/config"
-	"github.com/firdausalif/skripsi/dokumen-service/pkg/middleware"
-	"github.com/firdausalif/skripsi/dokumen-service/pkg/route"
-	"github.com/firdausalif/skripsi/dokumen-service/platform/database"
-	"github.com/firdausalif/skripsi/dokumen-service/platform/logger"
+	"github.com/firdausalif/challenge-todolist/pkg/config"
+	"github.com/firdausalif/challenge-todolist/pkg/middleware"
+	"github.com/firdausalif/challenge-todolist/pkg/route"
+	"github.com/firdausalif/challenge-todolist/platform/database"
+	"github.com/firdausalif/challenge-todolist/platform/logger"
 	"github.com/gofiber/fiber/v2"
 	"os"
 	"os/signal"
@@ -34,7 +34,7 @@ func Serve() {
 
 	// Routes.
 	route.GeneralRoute(app)
-	route.SwaggerRoute(app)
+	//route.SwaggerRoute(app)
 	route.PublicRoutes(app)
 	route.PrivateRoutes(app)
 	route.NotFoundRoute(app)

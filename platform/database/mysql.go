@@ -19,7 +19,7 @@ var err error
 
 // connect sets the db client of database using configuration
 func (db *DB) connect(cfg *config.DB) error {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,
