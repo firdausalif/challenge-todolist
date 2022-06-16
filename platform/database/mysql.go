@@ -19,16 +19,20 @@ var err error
 
 // connect sets the db client of database using configuration
 func (db *DB) connect(cfg *config.DB) error {
-	dsn := fmt.Sprintf("user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local",
-		cfg.Host,
-		cfg.Port,
-		cfg.SslMode,
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.User,
 		cfg.Password,
+		cfg.Host,
+		cfg.Port,
 		cfg.Name,
 	)
 
-	gormConfig := &gorm.Config{}
+	gormConfig := &gorm.Config{
+		// enhance performance config
+		PrepareStmt:            true,
+		SkipDefaultTransaction: true,
+	}
+
 	if config.DBCfg().Debug {
 		gormConfig.Logger = logger.Default.LogMode(logger.Info)
 	}
