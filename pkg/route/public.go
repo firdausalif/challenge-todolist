@@ -20,7 +20,22 @@ func PublicRoutes(app *fiber.App) {
 	activityService := services.NewActivityService(activityRepo, timeoutCtx)
 	activityController := controllers.NewActivityController(activityService, validate)
 
+	todoRepo := repositories.NewTodoRepository(db)
+	todoService := services.NewTodoService(todoRepo, timeoutCtx)
+	todoController := controllers.NewTodoController(todoService, validate)
+
 	activityGroup := app.Group("/activity-groups")
 	activityGroup.Get("", activityController.FetchHandler)
 	activityGroup.Post("", activityController.StoreActivityHandler)
+	activityGroup.Get("/:id", activityController.DetailActivityHandler)
+	activityGroup.Delete("/:id", activityController.DeleteActivityHandler)
+	activityGroup.Patch("/:id", activityController.EditActivityHandler)
+
+	todoGroup := app.Group("/todo-items")
+	todoGroup.Get("", todoController.FetchHandler)
+	todoGroup.Post("", todoController.StoreTodoHandler)
+	todoGroup.Get("/:id", todoController.DetailTodoHandler)
+	todoGroup.Delete("/:id", todoController.DeleteTodoHandler)
+	todoGroup.Patch("/:id", todoController.EditTodoHandler)
+
 }
