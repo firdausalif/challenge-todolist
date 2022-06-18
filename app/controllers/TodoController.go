@@ -46,15 +46,15 @@ func (t *TodoController) FetchHandler(ctx *fiber.Ctx) error {
 	key := fmt.Sprintf("todos-%d", id)
 	todo, err := cache.Get(key)
 	if err == cacheNotFound {
-		todo, _, err := t.todoService.Fetch(ctx.Context(), uint64(id))
-		if err != nil {
-			return helper.JsonERROR(ctx, err)
-		}
+		go func() {
+			todo, _, _ := t.todoService.Fetch(ctx.Context(), uint64(id))
+			respsChan <- todo
+		}()
+		todo = <-respsChan
 		go cache.SetWithTTL(key, todo, 10*time.Minute)
 		return helper.JsonSUCCESS(ctx, todo)
 	}
-
-	return helper.JsonSUCCESS(ctx, todo)
+	return helper.JsonSUCCESS(ctx, todo.([]*models.Todo))
 }
 
 func (t *TodoController) StoreTodoHandler(ctx *fiber.Ctx) error {
@@ -72,13 +72,14 @@ func (t *TodoController) StoreTodoHandler(ctx *fiber.Ctx) error {
 		return helper.JsonValidationError(ctx, "activity_group_id cannot be null")
 	}
 
-	resp, _, err := t.todoService.Create(ctx.Context(), req)
-	if err != nil {
-		return helper.JsonERROR(ctx, err)
-	}
-
+	go func() {
+		resp, _, _ := t.todoService.Create(ctx.Context(), req)
+		respChan <- resp
+	}()
+	resp := <-respChan
+	key := fmt.Sprintf("todo-id-%d", resp.ID)
+	go cache.SetWithTTL(key, resp, time.Hour)
 	go cache.Remove("todos-0")
-
 	return helper.JsonCreated(ctx, resp)
 }
 

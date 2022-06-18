@@ -9,14 +9,14 @@ import (
 
 type (
 	Todo struct {
-		ID              uint64         `json:"id"`
-		ActivityGroupID uint64         `json:"activity_group_id" gorm:"index"`
-		Title           string         `json:"title"`
-		IsActive        *bool          `gorm:"default:1" json:"is_active"`
-		Priority        string         `gorm:"default:'very-high'" json:"priority"`
-		CreatedAt       time.Time      `json:"created_at"`
-		UpdatedAt       time.Time      `json:"updated_at"`
-		DeletedAt       gorm.DeletedAt `json:"deleted_at"`
+		ID              uint64         `db:"id" json:"id"`
+		ActivityGroupID uint64         `db:"activity_group_id" json:"activity_group_id" gorm:"index"`
+		Title           string         `db:"title" json:"title"`
+		IsActive        *bool          `db:"is_active" gorm:"default:1" json:"is_active"`
+		Priority        string         `db:"priority" gorm:"default:'very-high'" json:"priority"`
+		CreatedAt       time.Time      `db:"created_at" json:"created_at"`
+		UpdatedAt       time.Time      `db:"updated_at" json:"updated_at"`
+		DeletedAt       gorm.DeletedAt `db:"deleted_at" json:"deleted_at"`
 	}
 
 	TodoRepository interface {

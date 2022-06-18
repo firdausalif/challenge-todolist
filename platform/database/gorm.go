@@ -6,7 +6,7 @@ import (
 	"github.com/firdausalif/challenge-todolist/platform/migrations"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	"time"
 )
 
 // database instance
@@ -19,11 +19,10 @@ var err error
 
 // connect sets the db client of database using configuration
 func (db *DB) connect(cfg *config.DB) error {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8&parseTime=True",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,
-		cfg.Port,
 		cfg.Name,
 	)
 
@@ -34,7 +33,7 @@ func (db *DB) connect(cfg *config.DB) error {
 	}
 
 	if config.DBCfg().Debug {
-		gormConfig.Logger = logger.Default.LogMode(logger.Info)
+		//gormConfig.Logger = logger.Default.LogMode(logger.Info)
 	}
 
 	db.DB, err = gorm.Open(mysql.Open(dsn), gormConfig)
@@ -51,9 +50,9 @@ func (db *DB) connect(cfg *config.DB) error {
 	}
 
 	// connection pool settings
-	pgdb.SetMaxOpenConns(cfg.MaxOpenConn)
-	pgdb.SetMaxIdleConns(cfg.MaxIdleConn)
-	pgdb.SetConnMaxLifetime(cfg.MaxConnLifetime)
+	pgdb.SetMaxOpenConns(10000)
+	pgdb.SetMaxIdleConns(10000)
+	pgdb.SetConnMaxLifetime(10 * time.Minute)
 
 	// Try to ping database.
 	if err := pgdb.Ping(); err != nil {

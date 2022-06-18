@@ -13,6 +13,7 @@ import (
 // PublicRoutes func for describe group of public route.
 func PublicRoutes(app *fiber.App) {
 	db := database.GetDB()
+
 	validate := validator.NewValidator()
 	timeoutCtx := time.Duration(100) * time.Second
 

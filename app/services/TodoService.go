@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"github.com/firdausalif/challenge-todolist/app/models"
 	"github.com/firdausalif/challenge-todolist/app/requests"
 	"github.com/firdausalif/challenge-todolist/pkg/constant"
@@ -30,15 +31,19 @@ func (t TodoService) Create(ctx context.Context, req requests.CreateTodo) (*mode
 		req.Priority = "very-high"
 	}
 
+	dt := time.Now()
 	record := &models.Todo{
 		ActivityGroupID: req.ActivityGroupID,
 		Title:           req.Title,
 		IsActive:        &req.IsActive,
 		Priority:        req.Priority,
+		CreatedAt:       dt.Local(),
+		UpdatedAt:       dt.Local(),
 	}
 
 	_, err := t.todoRepository.InsertTodos(ctx, record)
 	if err != nil {
+		fmt.Println(err)
 		return nil, constant.CodeInternalServerError, err
 	}
 
@@ -49,12 +54,14 @@ func (t TodoService) Update(ctx context.Context, id uint64, req requests.UpdateT
 	ctx, cancel := context.WithTimeout(ctx, t.ctxTimeout)
 	defer cancel()
 
+	dt := time.Now()
 	record := &models.Todo{
 		ID:              id,
 		Title:           req.Title,
 		Priority:        req.Priority,
 		ActivityGroupID: req.ActivityGroupID,
 		IsActive:        &req.IsActive,
+		UpdatedAt:       dt.Local(),
 	}
 
 	updateActivity, err := t.todoRepository.UpdateTodo(ctx, record)

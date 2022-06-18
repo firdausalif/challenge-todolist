@@ -29,11 +29,11 @@ func DBCfg() *DB {
 
 // LoadDBCfg loads DB configuration
 func LoadDBCfg() {
-	db.Host = os.Getenv("DB_HOST")
-	db.Port, _ = strconv.Atoi(os.Getenv("DB_PORT"))
-	db.User = os.Getenv("DB_USER")
-	db.Password = os.Getenv("DB_PASSWORD")
-	db.Name = os.Getenv("DB_NAME")
+	db.Host = os.Getenv("MYSQL_HOST")
+	db.Port, _ = strconv.Atoi(os.Getenv("MYSQL_PORT"))
+	db.User = os.Getenv("MYSQL_USER")
+	db.Password = os.Getenv("MYSQL_PASSWORD")
+	db.Name = os.Getenv("MYSQL_DBNAME")
 	db.SslMode = os.Getenv("DB_SSL_MODE")
 	db.Debug, _ = strconv.ParseBool(os.Getenv("DB_DEBUG"))
 	db.MaxOpenConn, _ = strconv.Atoi(os.Getenv("DB_MAX_OPEN_CONNECTIONS"))

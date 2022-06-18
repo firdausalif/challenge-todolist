@@ -42,7 +42,7 @@ func (t *TodoRepoitory) GetTodoByID(ctx context.Context, id uint64) (*models.Tod
 }
 
 func (t *TodoRepoitory) UpdateTodo(ctx context.Context, a *models.Todo) (*models.Todo, error) {
-	res := t.DB.
+	res := t.DB.WithContext(ctx).
 		Model(&models.Todo{ID: a.ID}).Updates(a).Find(a)
 
 	if res.Error != nil {
@@ -70,7 +70,7 @@ func (t *TodoRepoitory) RemoveTodo(ctx context.Context, id uint64) error {
 func (t *TodoRepoitory) FetchTodos(ctx context.Context, ActGroupID uint64) ([]*models.Todo, error) {
 	var data []*models.Todo
 
-	query := t.DB.
+	query := t.DB.WithContext(ctx).
 		Select("id", "activity_group_id", "title", "priority", "created_at", "updated_at", "deleted_at")
 	if ActGroupID != 0 {
 		query = query.Where("activity_group_id = ? ", ActGroupID)
