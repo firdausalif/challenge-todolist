@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
+	runtime.GOMAXPROCS(2)
 	env := ".env"
 	if os.Getenv("APP_ENV") == "test" {
 		env = ".env.test"
